@@ -48,7 +48,7 @@ function Dashboard({ subscriptions, exchangeRate, onExchangeRateChange }) {
     return total + projected
   }, 0)
 
-  // Full year figure: monthly × 12, all converted to NGN (static — only changes when subs change)
+  // Full year figure: monthly x 12, all converted to NGN (static, only changes when subs change)
   const fullYearNGN = Object.entries(monthlyByCurrency).reduce((total, [code, monthly]) => {
     const yearly = monthly * 12
     if (code === 'NGN') return total + yearly
@@ -167,7 +167,7 @@ function Dashboard({ subscriptions, exchangeRate, onExchangeRateChange }) {
         {/* Full Year total (Jan - Dec, static based on current subs) */}
         <div className="flex flex-col gap-1 sm:border-l sm:border-border-default sm:pl-6">
           <span className="text-[11px] font-semibold text-text-muted uppercase tracking-wider">
-            Full Year (Jan – Dec)
+            Full Year (Jan to Dec)
           </span>
           <span className="text-2xl font-extrabold text-text-primary tracking-tight">
             ₦{fullYearNGN.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}

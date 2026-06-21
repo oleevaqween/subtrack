@@ -84,7 +84,7 @@ function SyncPanel({ syncStatus, passphrase, onConnect, onDisconnect }) {
       </form>
 
       <p className="text-[10px] text-text-muted">
-        Use the same passphrase on all devices. Anyone with your passphrase can access your data — keep it secret.
+        Use the same passphrase on all devices. Anyone with your passphrase can access your data. Keep it secret.
       </p>
     </div>
   )

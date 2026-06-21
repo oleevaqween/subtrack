@@ -245,7 +245,7 @@ function AddSubscription({ onAdd, onUpdate, onClose, editingSub }) {
             </div>
           </div>
 
-          {/* Next Billing Date — clickable */}
+          {/* Next Billing Date, clickable */}
           <div>
             <label htmlFor="sub-billing" className={labelClasses}>Next Billing Date</label>
             <div className="relative">

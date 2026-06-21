@@ -25,8 +25,8 @@ function getRenewalStatus(sub) {
   const daysUntil = differenceInDays(billingDate, today)
   const reminderDays = parseInt(sub.reminderDays) || 2
 
-  if (daysUntil <= Math.floor(reminderDays / 2)) return 'urgent' // red — very close
-  if (daysUntil <= reminderDays) return 'warning' // amber — within reminder window
+  if (daysUntil <= Math.floor(reminderDays / 2)) return 'urgent' // red, very close
+  if (daysUntil <= reminderDays) return 'warning' // amber, within reminder window
 
   return 'normal'
 }
