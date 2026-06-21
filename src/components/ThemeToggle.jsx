@@ -7,9 +7,9 @@ function ThemeToggle({ theme, onToggle }) {
     <button
       onClick={onToggle}
       aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-      className="fixed bottom-6 right-6 z-50 group"
+      className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 group"
     >
-      <div className="relative w-14 h-14 rounded-2xl bg-surface-card border border-border-default shadow-xl hover:shadow-2xl hover:scale-110 active:scale-95 transition-all duration-300 flex items-center justify-center overflow-hidden">
+      <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-surface-card border border-border-default shadow-xl hover:shadow-2xl hover:scale-110 active:scale-95 transition-all duration-300 flex items-center justify-center overflow-hidden">
         {/* Animated background glow */}
         <div className={`absolute inset-0 transition-opacity duration-500 ${
           isDark
@@ -19,7 +19,7 @@ function ThemeToggle({ theme, onToggle }) {
 
         {/* Sun icon */}
         <Sun
-          size={22}
+          size={20}
           className={`absolute transition-all duration-500 ${
             isDark
               ? 'rotate-90 scale-0 opacity-0 text-amber-400'
@@ -29,7 +29,7 @@ function ThemeToggle({ theme, onToggle }) {
 
         {/* Moon icon */}
         <Moon
-          size={20}
+          size={18}
           className={`absolute transition-all duration-500 ${
             isDark
               ? 'rotate-0 scale-100 opacity-100 text-indigo-300'
@@ -50,9 +50,9 @@ function ThemeToggle({ theme, onToggle }) {
         }`} />
       </div>
 
-      {/* Tooltip */}
-      <span className="absolute bottom-full right-0 mb-2 px-3 py-1.5 text-xs font-medium bg-surface-card border border-border-default text-text-primary rounded-lg shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap">
-        {isDark ? '☀️ Light mode' : '🌙 Dark mode'}
+      {/* Tooltip - hidden on mobile */}
+      <span className="hidden sm:block absolute bottom-full right-0 mb-2 px-3 py-1.5 text-xs font-medium bg-surface-card border border-border-default text-text-primary rounded-lg shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap">
+        {isDark ? 'Light mode' : 'Dark mode'}
       </span>
     </button>
   )

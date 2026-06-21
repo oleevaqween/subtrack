@@ -141,14 +141,14 @@ function Dashboard({ subscriptions, exchangeRate, onExchangeRateChange }) {
       </div>
 
       {/* Exchange rate + Projections */}
-      <div className="bg-surface-card border border-border-default rounded-3xl p-6 grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-6 items-center">
+      <div className="bg-surface-card border border-border-default rounded-3xl p-5 sm:p-6 grid grid-cols-1 gap-5 sm:grid-cols-3 sm:gap-6 items-start sm:items-center">
         {/* Exchange rate input */}
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white shadow-lg shadow-cyan-500/20 shrink-0">
             <ArrowRightLeft size={18} />
           </div>
           <div className="flex flex-col">
-            <span className="text-[11px] font-semibold text-text-muted uppercase tracking-wider">USD → NGN Rate</span>
+            <span className="text-[11px] font-semibold text-text-muted uppercase tracking-wider">USD to NGN Rate</span>
             <div className="flex items-center gap-1.5 mt-1">
               <span className="text-sm font-bold text-text-secondary">$1 =</span>
               <input
@@ -164,29 +164,35 @@ function Dashboard({ subscriptions, exchangeRate, onExchangeRateChange }) {
           </div>
         </div>
 
+        {/* Divider on mobile */}
+        <div className="sm:hidden w-full h-px bg-border-default" />
+
         {/* Full Year total (Jan - Dec, static based on current subs) */}
         <div className="flex flex-col gap-1 sm:border-l sm:border-border-default sm:pl-6">
           <span className="text-[11px] font-semibold text-text-muted uppercase tracking-wider">
             Full Year (Jan to Dec)
           </span>
-          <span className="text-2xl font-extrabold text-text-primary tracking-tight">
+          <span className="text-xl sm:text-2xl font-extrabold text-text-primary tracking-tight break-all">
             ₦{fullYearNGN.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </span>
           <span className="text-[11px] text-text-muted">
-            12 months × current subs
+            12 months x current subs
           </span>
         </div>
+
+        {/* Divider on mobile */}
+        <div className="sm:hidden w-full h-px bg-border-default" />
 
         {/* Remaining projection (till Dec) */}
         <div className="flex flex-col gap-1 sm:border-l sm:border-border-default sm:pl-6">
           <span className="text-[11px] font-semibold text-text-muted uppercase tracking-wider">
             Remaining (till Dec)
           </span>
-          <span className="text-2xl font-extrabold text-text-primary tracking-tight">
+          <span className="text-xl sm:text-2xl font-extrabold text-text-primary tracking-tight break-all">
             ₦{consolidatedNGN.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </span>
           <span className="text-[11px] text-text-muted">
-            ~{Math.round(remainingMonths)} months left • all in Naira
+            ~{Math.round(remainingMonths)} months left, all in Naira
           </span>
         </div>
       </div>

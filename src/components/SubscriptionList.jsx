@@ -111,20 +111,20 @@ function SubscriptionList({ subscriptions, filter, searchQuery, onFilterChange, 
   }
 
   return (
-    <section aria-label="Subscriptions list" className="flex flex-col gap-6">
+    <section aria-label="Subscriptions list" className="flex flex-col gap-5 sm:gap-6">
       {/* Header with filters */}
-      <div className="flex items-center justify-between flex-wrap gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
         <div className="flex items-center gap-3">
           <Zap size={20} className="text-amber-500" />
-          <h2 className="text-xl font-bold text-text-primary">Subscriptions</h2>
+          <h2 className="text-lg sm:text-xl font-bold text-text-primary">Subscriptions</h2>
         </div>
-        <div className="flex bg-surface-card border border-border-default rounded-2xl p-1.5 gap-1" role="tablist" aria-label="Filter subscriptions">
+        <div className="flex bg-surface-card border border-border-default rounded-2xl p-1.5 gap-1 self-start sm:self-auto" role="tablist" aria-label="Filter subscriptions">
           {filters.map(f => (
             <button
               key={f.key}
               role="tab"
               aria-selected={filter === f.key}
-              className={`px-4 py-2 text-xs font-semibold rounded-xl transition-all duration-200 ${
+              className={`px-3 sm:px-4 py-2 text-xs font-semibold rounded-xl transition-all duration-200 ${
                 filter === f.key
                   ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg shadow-purple-500/20'
                   : 'text-text-secondary hover:text-text-primary hover:bg-surface-input'
