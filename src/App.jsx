@@ -1,13 +1,16 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import Dashboard from './components/Dashboard'
 import SubscriptionList from './components/SubscriptionList'
 import AddSubscription from './components/AddSubscription'
 import Header from './components/Header'
 import ThemeToggle from './components/ThemeToggle'
+import SyncPanel from './components/SyncPanel'
+import { syncToFirebase, subscribeToFirebase, isFirebaseConfigured } from './firebase'
 
 const STORAGE_KEY = 'subtrack_subscriptions'
 const THEME_KEY = 'subtrack_theme'
 const RATE_KEY = 'subtrack_exchange_rate'
+const SYNC_KEY = 'subtrack_sync_passphrase'
 
 export const CURRENCIES = {
   NGN: { code: 'NGN', symbol: '₦', name: 'Nigerian Naira' },
@@ -42,6 +45,14 @@ function loadExchangeRate() {
   }
 }
 
+function loadSyncPassphrase() {
+  try {
+    return localStorage.getItem(SYNC_KEY) || ''
+  } catch {
+    return ''
+  }
+}
+
 function saveSubscriptions(subs) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(subs))
 }
@@ -54,19 +65,104 @@ function App() {
   const [searchQuery, setSearchQuery] = useState('')
   const [theme, setTheme] = useState(loadTheme)
   const [exchangeRate, setExchangeRate] = useState(loadExchangeRate)
+  const [syncPassphrase, setSyncPassphrase] = useState(loadSyncPassphrase)
+  const [syncStatus, setSyncStatus] = useState(loadSyncPassphrase() ? 'connected' : 'disconnected')
 
+  const unsubscribeRef = useRef(null)
+  const isRemoteUpdate = useRef(false)
+  const firebaseEnabled = isFirebaseConfigured()
+
+  // Save to localStorage
   useEffect(() => {
     saveSubscriptions(subscriptions)
   }, [subscriptions])
+
+  useEffect(() => {
+    localStorage.setItem(RATE_KEY, exchangeRate)
+  }, [exchangeRate])
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark')
     localStorage.setItem(THEME_KEY, theme)
   }, [theme])
 
+  // Sync to Firebase whenever data changes (if connected)
   useEffect(() => {
-    localStorage.setItem(RATE_KEY, exchangeRate)
-  }, [exchangeRate])
+    if (!firebaseEnabled || !syncPassphrase || syncStatus !== 'connected') return
+    if (isRemoteUpdate.current) {
+      isRemoteUpdate.current = false
+      return
+    }
+
+    const timeout = setTimeout(() => {
+      syncToFirebase(syncPassphrase, {
+        subscriptions,
+        exchangeRate,
+      }).catch(console.error)
+    }, 500) // debounce
+
+    return () => clearTimeout(timeout)
+  }, [subscriptions, exchangeRate, syncPassphrase, syncStatus, firebaseEnabled])
+
+  // Subscribe to Firebase real-time updates
+  const startSync = useCallback(async (passphrase) => {
+    if (!firebaseEnabled) return
+
+    // Clean up previous subscription
+    if (unsubscribeRef.current) {
+      unsubscribeRef.current()
+    }
+
+    try {
+      const unsub = await subscribeToFirebase(passphrase, (data) => {
+        isRemoteUpdate.current = true
+        if (data.subscriptions) {
+          setSubscriptions(data.subscriptions)
+          saveSubscriptions(data.subscriptions)
+        }
+        if (data.exchangeRate) {
+          setExchangeRate(data.exchangeRate)
+          localStorage.setItem(RATE_KEY, data.exchangeRate)
+        }
+      })
+      unsubscribeRef.current = unsub
+      setSyncStatus('connected')
+    } catch (err) {
+      console.error('Sync failed:', err)
+      setSyncStatus('disconnected')
+    }
+  }, [firebaseEnabled])
+
+  // Auto-reconnect on load if passphrase exists
+  useEffect(() => {
+    if (firebaseEnabled && syncPassphrase) {
+      startSync(syncPassphrase)
+    }
+    return () => {
+      if (unsubscribeRef.current) {
+        unsubscribeRef.current()
+      }
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleConnect = async (passphrase) => {
+    setSyncPassphrase(passphrase)
+    localStorage.setItem(SYNC_KEY, passphrase)
+
+    // Push current local data first, then subscribe
+    await syncToFirebase(passphrase, { subscriptions, exchangeRate })
+    await startSync(passphrase)
+  }
+
+  const handleDisconnect = () => {
+    if (unsubscribeRef.current) {
+      unsubscribeRef.current()
+      unsubscribeRef.current = null
+    }
+    setSyncPassphrase('')
+    setSyncStatus('disconnected')
+    localStorage.removeItem(SYNC_KEY)
+  }
 
   const toggleTheme = () => {
     setTheme(prev => (prev === 'dark' ? 'light' : 'dark'))
@@ -131,6 +227,16 @@ function App() {
           exchangeRate={exchangeRate}
           onExchangeRateChange={setExchangeRate}
         />
+
+        {firebaseEnabled && (
+          <SyncPanel
+            syncStatus={syncStatus}
+            passphrase={syncPassphrase}
+            onConnect={handleConnect}
+            onDisconnect={handleDisconnect}
+          />
+        )}
+
         <SubscriptionList
           subscriptions={subscriptions}
           filter={filter}
