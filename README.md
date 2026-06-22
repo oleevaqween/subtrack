@@ -1,6 +1,6 @@
 # SubTrack Subscription Tracker
 
-A modern, beautiful web app to track and monitor your subscriptions. Supports multiple currencies (NGN & USD), smart renewal reminders, real-time sync across devices, and consolidated spending projections.
+A modern, beautiful web app to track and monitor your subscriptions. Supports multiple currencies (NGN and USD), smart renewal reminders, real-time sync across devices, and consolidated spending projections. Fully responsive and works great on mobile.
 
 ## Features
 
@@ -10,10 +10,11 @@ A modern, beautiful web app to track and monitor your subscriptions. Supports mu
 - **Smart reminders** cards glow amber/red as renewal dates approach (configurable per subscription)
 - **Dashboard stats** monthly spend, remaining year projection, full-year total, upcoming renewals
 - **Real-time sync** use a passphrase to sync data across all your devices via Firebase
-- **Light & Dark mode** floating toggle, respects system preference
+- **Light and Dark mode** floating toggle, respects system preference
 - **Animated active cards** subtle orbiting light on running subscriptions
 - **Quick-add** popular services (Netflix, Spotify, Showmax, MTN Data, etc.)
 - **Pause/Resume** subscriptions without deleting
+- **Mobile-friendly** fully responsive layout that adapts to any screen size. Collapsible search, stacked layouts on small screens, touch-friendly buttons and inputs
 - **Persistent storage** localStorage as fallback, Firebase for cross-device sync
 
 ## Prerequisites
@@ -127,6 +128,10 @@ subscription-tracker/
         ├── SyncPanel.jsx
         └── ThemeToggle.jsx
 ```
+
+## Collaborate
+
+If you have ideas to make this better or want to contribute, feel free to reach out at **praiseisaac01@gmail.com**. Always open to good conversations and fresh perspectives.
 
 ## License
 
